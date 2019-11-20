@@ -21,8 +21,6 @@ public class OrderDetailDTO {
 
 	private BigDecimal currentProductPrice;
 
-	private BigDecimal discount;
-
 	private Integer quantity;
 
 	private OrderDTO order;

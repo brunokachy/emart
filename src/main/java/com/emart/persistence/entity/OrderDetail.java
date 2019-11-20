@@ -38,9 +38,6 @@ public class OrderDetail implements Serializable {
 	@Column(nullable = false, precision = 36, scale = 16)
 	private BigDecimal currentProductPrice;
 
-	@Column(nullable = false, precision = 36, scale = 16)
-	private BigDecimal discount;
-
 	@Column(nullable = false)
 	private Integer quantity;
 }

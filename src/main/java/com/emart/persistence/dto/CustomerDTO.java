@@ -1,5 +1,7 @@
 package com.emart.persistence.dto;
 
+import java.io.Serializable;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -10,7 +12,7 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 @Builder
-public class CustomerDTO {
+public class CustomerDTO implements Serializable {
 
 	private Long id;
 

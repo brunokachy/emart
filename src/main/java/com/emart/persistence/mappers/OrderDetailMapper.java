@@ -14,7 +14,6 @@ public class OrderDetailMapper {
 	static OrderDetail toEntity(OrderDetailDTO orderDetailDTO) {
 		return OrderDetail.builder()
 				.currentProductPrice(orderDetailDTO.getCurrentProductPrice())
-				.discount(orderDetailDTO.getDiscount())
 				.order(OrderMapper.toEntity(orderDetailDTO.getOrder()))
 				.product(ProductMapper.toEntity(orderDetailDTO.getProduct()))
 				.quantity(orderDetailDTO.getQuantity())
@@ -25,7 +24,6 @@ public class OrderDetailMapper {
 	static OrderDetailDTO toDomain(OrderDetail orderDetail) {
 		return OrderDetailDTO.builder()
 				.currentProductPrice(orderDetail.getCurrentProductPrice())
-				.discount(orderDetail.getDiscount())
 				.id(orderDetail.getId())
 				.order(OrderMapper.toDomain(orderDetail.getOrder()))
 				.product(ProductMapper.toDomain(orderDetail.getProduct()))
