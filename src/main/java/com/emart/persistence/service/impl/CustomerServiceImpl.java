@@ -2,7 +2,6 @@ package com.emart.persistence.service.impl;
 
 import org.springframework.stereotype.Service;
 
-import com.emart.exceptions.NotFoundException;
 import com.emart.persistence.entity.Customer;
 import com.emart.persistence.repository.CustomerRepository;
 import com.emart.persistence.service.CustomerService;
@@ -21,7 +20,7 @@ public class CustomerServiceImpl implements CustomerService {
 
 	@Override
 	public Customer getRecordById(final Long id) {
-		return customerRepository.findById(id).orElseThrow(() -> new NotFoundException("Record not found: Customer with Id: " + id));
+		return customerRepository.findById(id).orElseThrow(() -> new RuntimeException("Record not found: Customer with Id: " + id));
 	}
 
 	@Override
