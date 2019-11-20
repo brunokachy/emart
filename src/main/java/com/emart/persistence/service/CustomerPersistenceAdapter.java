@@ -5,5 +5,5 @@ import com.emart.persistence.entity.Customer;
 /**
  * @author Bruno Okafor 2019-11-19
  */
-public interface CustomerService extends CrudService<Customer> {
+public interface CustomerPersistenceAdapter extends CrudService<Customer> {
 }

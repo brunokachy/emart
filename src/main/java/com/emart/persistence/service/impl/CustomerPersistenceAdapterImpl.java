@@ -4,17 +4,17 @@ import org.springframework.stereotype.Service;
 
 import com.emart.persistence.entity.Customer;
 import com.emart.persistence.repository.CustomerRepository;
-import com.emart.persistence.service.CustomerService;
+import com.emart.persistence.service.CustomerPersistenceAdapter;
 
 /**
  * @author Bruno Okafor 2019-11-19
  */
 @Service
-public class CustomerServiceImpl implements CustomerService {
+public class CustomerPersistenceAdapterImpl implements CustomerPersistenceAdapter {
 
 	private CustomerRepository customerRepository;
 
-	public CustomerServiceImpl(final CustomerRepository customerRepository) {
+	public CustomerPersistenceAdapterImpl(final CustomerRepository customerRepository) {
 		this.customerRepository = customerRepository;
 	}
 

@@ -1,18 +1,16 @@
 package com.emart.service;
 
-import java.util.List;
-
-import com.emart.persistence.dto.ProductDTO;
-import com.emart.web.pojo.ProductRequest;
+import com.emart.web.dto.ProductDTO;
+import com.emart.web.dto.ProductListResponse;
 
 /**
  * @author Bruno Okafor 2019-11-20
  */
 public interface ProductService {
 
-	ProductDTO createProduct(ProductRequest productRequest);
+	ProductDTO createProduct(ProductDTO productDTO);
 
-	ProductDTO updateProduct(ProductRequest productRequest);
+	ProductDTO updateProduct(ProductDTO productDTO);
 
-	List<ProductDTO> fetchProducts();
+	ProductListResponse fetchProducts(int startIndex, int size);
 }

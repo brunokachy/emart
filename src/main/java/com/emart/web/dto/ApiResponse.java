@@ -1,4 +1,4 @@
-package com.emart.web.pojo;
+package com.emart.web.dto;
 
 /**
  * @author Bruno Okafor 2019-11-20

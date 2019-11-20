@@ -1,7 +1,5 @@
 package com.emart.web.controller;
 
-import java.util.List;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -11,12 +9,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.emart.persistence.dto.ProductDTO;
 import com.emart.service.ProductService;
-import com.emart.web.pojo.ApiResponse;
-import com.emart.web.pojo.ProductRequest;
+import com.emart.web.dto.ApiResponse;
+import com.emart.web.dto.ProductDTO;
+import com.emart.web.dto.ProductListResponse;
 import io.swagger.annotations.ApiOperation;
 
 /**
@@ -38,10 +37,10 @@ public class ProductController {
 	@ApiOperation(value = "Create Product")
 	@PostMapping(value = {"/create_product"}, produces = MediaType.APPLICATION_JSON_VALUE,
 			consumes = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<ApiResponse<ProductDTO>> createProduct(@RequestBody ProductRequest productRequest) {
-		log.info("CREATE PRODUCT: {}", productRequest.toString());
+	public ResponseEntity<ApiResponse<ProductDTO>> createProduct(@RequestBody ProductDTO productDTO) {
+		log.info("CREATE PRODUCT: {}", productDTO.toString());
 		ApiResponse<ProductDTO> apiResponse = new ApiResponse<>();
-		ProductDTO response = productService.createProduct(productRequest);
+		ProductDTO response = productService.createProduct(productDTO);
 		apiResponse.setMessage("Product created successfully");
 		apiResponse.setData(response);
 		return new ResponseEntity<>(apiResponse, HttpStatus.OK);
@@ -50,10 +49,10 @@ public class ProductController {
 	@ApiOperation(value = "Update Product")
 	@PostMapping(value = {"/update_product"}, produces = MediaType.APPLICATION_JSON_VALUE,
 			consumes = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<ApiResponse<ProductDTO>> updateProduct(@RequestBody ProductRequest productRequest) {
-		log.info("UPDATE PRODUCT: {}", productRequest.toString());
+	public ResponseEntity<ApiResponse<ProductDTO>> updateProduct(@RequestBody ProductDTO productDTO) {
+		log.info("UPDATE PRODUCT: {}", productDTO.toString());
 		ApiResponse<ProductDTO> apiResponse = new ApiResponse<>();
-		ProductDTO response = productService.updateProduct(productRequest);
+		ProductDTO response = productService.updateProduct(productDTO);
 		apiResponse.setMessage("Product updated successfully");
 		apiResponse.setData(response);
 		return new ResponseEntity<>(apiResponse, HttpStatus.OK);
@@ -61,10 +60,10 @@ public class ProductController {
 
 	@ApiOperation(value = "Fetch Products")
 	@GetMapping(value = {"/fetch_products"}, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<ApiResponse<List<ProductDTO>>> fetchProducts() {
+	public ResponseEntity<ApiResponse<ProductListResponse>> fetchProducts(@RequestParam(name = "start") int start, @RequestParam(name = "limit") int limit) {
 		log.info("FETCH PRODUCT");
-		ApiResponse<List<ProductDTO>> apiResponse = new ApiResponse<>();
-		List<ProductDTO> response = productService.fetchProducts();
+		ApiResponse<ProductListResponse> apiResponse = new ApiResponse<>();
+		ProductListResponse response = productService.fetchProducts(start, limit);
 		apiResponse.setMessage("Product fetched successfully");
 		apiResponse.setData(response);
 		return new ResponseEntity<>(apiResponse, HttpStatus.OK);

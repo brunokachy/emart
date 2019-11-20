@@ -1,21 +1,20 @@
-package com.emart.web.pojo;
+package com.emart.web.dto;
 
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
-import com.emart.persistence.dto.CustomerDTO;
 import lombok.Getter;
 import lombok.Setter;
 
 /**
- * @author Bruno Okafor 2019-11-20
+ * @author Bruno Okafor 2019-11-19
  */
 @Getter
 @Setter
-public class OrderResponse implements Serializable {
+public class OrderDTO implements Serializable {
 
-	private Long id;
+	private String orderId;
 
 	private CustomerDTO customer;
 
@@ -23,6 +22,6 @@ public class OrderResponse implements Serializable {
 
 	private Date dateCreated;
 
-	private List<ProductRequest> products;
+	private List<OrderDetailDTO> orderDetails;
 
 }

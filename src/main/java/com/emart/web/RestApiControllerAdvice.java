@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import com.emart.exceptions.BadRequestException;
 import com.emart.exceptions.NotFoundException;
-import com.emart.web.pojo.ApiResponse;
+import com.emart.web.dto.ApiResponse;
 
 /**
  * @author Bruno Okafor 2019-11-20

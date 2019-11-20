@@ -15,12 +15,14 @@ import javax.persistence.PreUpdate;
 
 import lombok.Builder;
 import lombok.Getter;
+import lombok.Setter;
 
 /**
  * @author Bruno Okafor 2019-11-19
  */
 
 @Getter
+@Setter
 @Builder
 @Entity
 public class Order implements Serializable {
@@ -37,6 +39,9 @@ public class Order implements Serializable {
 
 	@Column(nullable = false)
 	private Timestamp dateCreated;
+
+	@Column(nullable = false)
+	private String orderId;
 
 	@PreUpdate
 	@PrePersist

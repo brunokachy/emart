@@ -1,16 +1,14 @@
-package com.emart.web.pojo;
-
-import java.io.Serializable;
+package com.emart.web.dto;
 
 import lombok.Getter;
 import lombok.Setter;
 
 /**
- * @author Bruno Okafor 2019-11-20
+ * @author Bruno Okafor 2019-11-19
  */
 @Getter
 @Setter
-public class ProductRequest implements Serializable {
+public class ProductDTO {
 
 	private Long id;
 
@@ -20,5 +18,4 @@ public class ProductRequest implements Serializable {
 
 	private String productDescription;
 
-	private Integer quantity;
 }

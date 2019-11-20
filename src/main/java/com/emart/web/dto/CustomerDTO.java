@@ -1,17 +1,15 @@
-package com.emart.persistence.dto;
+package com.emart.web.dto;
 
 import java.io.Serializable;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
+import lombok.Setter;
 
 /**
  * @author Bruno Okafor 2019-11-19
  */
 @Getter
-@AllArgsConstructor
-@Builder
+@Setter
 public class CustomerDTO implements Serializable {
 
 	private Long id;

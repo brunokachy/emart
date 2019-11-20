@@ -7,7 +7,7 @@ import com.emart.persistence.entity.Product;
 /**
  * @author Bruno Okafor 2019-11-19
  */
-public interface ProductService extends CrudService<Product> {
-	Page<Product> getProducts(int startIndex, int size);
+public interface ProductPersistenceAdapter extends CrudService<Product> {
 
+	Page<Product> getProducts(int startIndex, int limit);
 }
