@@ -1,5 +1,7 @@
 package com.emart.persistence.service.impl;
 
+import java.util.Optional;
+
 import org.springframework.stereotype.Service;
 
 import com.emart.persistence.entity.Customer;
@@ -28,4 +30,8 @@ public class CustomerPersistenceAdapterImpl implements CustomerPersistenceAdapte
 		return customerRepository.save(customer);
 	}
 
+	@Override
+	public Optional<Customer> getCustomerByEmail(final String email) {
+		return customerRepository.findByEmail(email);
+	}
 }

@@ -9,7 +9,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -26,7 +25,7 @@ public class OrderDetail implements Serializable {
 	@GeneratedValue(strategy = GenerationType.SEQUENCE)
 	private Long id;
 
-	@OneToOne
+	@ManyToOne
 	private Product product;
 
 	@ManyToOne

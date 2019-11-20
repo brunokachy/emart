@@ -3,6 +3,7 @@ package com.emart.persistence.service.impl;
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
@@ -36,6 +37,11 @@ public class OrderPersistenceAdapterImpl implements OrderPersistenceAdapter {
 	@Override
 	public List<Order> fetchOrdersByDate(final Date from, final Date to) {
 		return orderRepository.getAllByDateCreatedBetween(new Timestamp(from.getTime()), new Timestamp(to.getTime()));
+	}
+
+	@Override
+	public Optional<Order> getOrderByOrderId(final String orderId) {
+		return orderRepository.getOrderByOrderId(orderId);
 	}
 
 

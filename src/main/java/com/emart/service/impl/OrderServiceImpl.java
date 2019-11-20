@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 import javax.transaction.Transactional;
 
@@ -54,19 +55,12 @@ public class OrderServiceImpl implements OrderService {
 		validateOrder(orderRequest);
 
 		Double totalOrderValue = 0.0;
-
-		Customer customer = Customer.builder()
-				.phoneNumber(orderRequest.getCustomer().getPhoneNumber())
-				.lastName(orderRequest.getCustomer().getLastName())
-				.firstName(orderRequest.getCustomer().getFirstName())
-				.email(orderRequest.getCustomer().getEmail())
-				.build();
-		customer = customerPersistenceAdapter.saveRecord(customer);
+		Customer customer = customerCheck(orderRequest);
 
 		Order order = Order.builder()
 				.totalOrderValue(BigDecimal.valueOf(totalOrderValue))
 				.customer(customer)
-				.orderId(RandomStringUtils.randomAlphabetic(6).toUpperCase())
+				.orderId(generateUniqueOrderId())
 				.build();
 		order = orderPersistenceAdapter.saveRecord(order);
 
@@ -135,7 +129,34 @@ public class OrderServiceImpl implements OrderService {
 		return orderList;
 	}
 
-	private CustomerDTO from(Customer customer) {
+	private String generateUniqueOrderId() {
+		String orderId = RandomStringUtils.randomAlphabetic(6).toUpperCase();
+		Optional<Order> optionalOrder = orderPersistenceAdapter.getOrderByOrderId(orderId);
+
+		while (optionalOrder.isPresent()) {
+			orderId = RandomStringUtils.randomAlphabetic(6).toUpperCase();
+			optionalOrder = orderPersistenceAdapter.getOrderByOrderId(orderId);
+		}
+
+		return orderId;
+	}
+
+	private Customer customerCheck(final OrderDTO orderRequest) {
+		Optional<Customer> optionalCustomer = customerPersistenceAdapter.getCustomerByEmail(orderRequest.getCustomer().getEmail());
+
+		if (!optionalCustomer.isPresent()) {
+			Customer customer = Customer.builder()
+					.phoneNumber(orderRequest.getCustomer().getPhoneNumber())
+					.lastName(orderRequest.getCustomer().getLastName())
+					.firstName(orderRequest.getCustomer().getFirstName())
+					.email(orderRequest.getCustomer().getEmail())
+					.build();
+			return customerPersistenceAdapter.saveRecord(customer);
+		}
+		return optionalCustomer.get();
+	}
+
+	private CustomerDTO from(final Customer customer) {
 		CustomerDTO customerDTO = new CustomerDTO();
 		customerDTO.setEmail(customer.getEmail());
 		customerDTO.setFirstName(customer.getFirstName());
@@ -145,7 +166,7 @@ public class OrderServiceImpl implements OrderService {
 		return customerDTO;
 	}
 
-	private ProductDTO from(Product product) {
+	private ProductDTO from(final Product product) {
 		ProductDTO productDTO = new ProductDTO();
 		productDTO.setProductPrice(product.getProductPrice().doubleValue());
 		productDTO.setProductName(product.getProductName());

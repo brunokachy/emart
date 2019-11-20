@@ -12,6 +12,7 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
+import javax.persistence.Table;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -25,6 +26,7 @@ import lombok.Setter;
 @Setter
 @Builder
 @Entity
+@Table(name = "product_order")
 public class Order implements Serializable {
 
 	@Id
