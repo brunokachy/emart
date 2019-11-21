@@ -57,23 +57,22 @@ public class OrderServiceImpl implements OrderService {
 		Double totalOrderValue = 0.0;
 		Customer customer = customerCheck(orderRequest);
 
-		Order order = Order.builder()
-				.totalOrderValue(BigDecimal.valueOf(totalOrderValue))
-				.customer(customer)
-				.orderId(generateUniqueOrderId())
-				.build();
+		Order order = new Order();
+		order.setTotalOrderValue(BigDecimal.valueOf(totalOrderValue));
+		order.setCustomer(customer);
+		order.setOrderId(generateUniqueOrderId());
 		order = orderPersistenceAdapter.saveRecord(order);
 
 		final List<OrderDetailDTO> orderDetails = orderRequest.getOrderDetails();
 		for (int i = 0, orderDetailsSize = orderDetails.size(); i < orderDetailsSize; i++) {
 			final OrderDetailDTO orderDetailDTO = orderDetails.get(i);
 			Product product = productPersistenceAdapter.getRecordById(orderDetailDTO.getProduct().getId());
-			OrderDetail orderDetail = OrderDetail.builder()
-					.sellingPrice(product.getProductPrice())
-					.quantity(orderDetailDTO.getQuantity())
-					.product(product)
-					.order(order)
-					.build();
+			OrderDetail orderDetail = new OrderDetail();
+			orderDetail.setProduct(product);
+			orderDetail.setQuantity(orderDetailDTO.getQuantity());
+			orderDetail.setSellingPrice(product.getProductPrice());
+			orderDetail.setOrder(order);
+
 			orderDetailPersistenceAdapter.saveRecord(orderDetail);
 
 			Double productOrderValue = orderDetail.getSellingPrice().doubleValue() * orderDetail.getQuantity().doubleValue();
@@ -145,12 +144,12 @@ public class OrderServiceImpl implements OrderService {
 		Optional<Customer> optionalCustomer = customerPersistenceAdapter.getCustomerByEmail(orderRequest.getCustomer().getEmail());
 
 		if (!optionalCustomer.isPresent()) {
-			Customer customer = Customer.builder()
-					.phoneNumber(orderRequest.getCustomer().getPhoneNumber())
-					.lastName(orderRequest.getCustomer().getLastName())
-					.firstName(orderRequest.getCustomer().getFirstName())
-					.email(orderRequest.getCustomer().getEmail())
-					.build();
+			Customer customer = new Customer();
+			customer.setEmail(orderRequest.getCustomer().getEmail());
+			customer.setFirstName(orderRequest.getCustomer().getFirstName());
+			customer.setLastName(orderRequest.getCustomer().getLastName());
+			customer.setPhoneNumber(orderRequest.getCustomer().getPhoneNumber());
+
 			return customerPersistenceAdapter.saveRecord(customer);
 		}
 		return optionalCustomer.get();

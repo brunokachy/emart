@@ -38,11 +38,10 @@ public class ProductServiceImpl implements ProductService {
 			throw new BadRequestException("Missing required detail: Product price.");
 		}
 
-		Product product = Product.builder()
-				.productPrice(new BigDecimal(productDTO.getProductPrice()))
-				.productName(productDTO.getProductName())
-				.productDescription(productDTO.getProductDescription())
-				.build();
+		Product product = new Product();
+		product.setProductDescription(productDTO.getProductDescription());
+		product.setProductName(productDTO.getProductName());
+		product.setProductPrice(BigDecimal.valueOf(productDTO.getProductPrice()));
 
 		product = productPersistenceAdapter.saveRecord(product);
 
@@ -62,12 +61,11 @@ public class ProductServiceImpl implements ProductService {
 			throw new BadRequestException("Missing required detail: Product id.");
 		}
 
-		Product product = Product.builder()
-				.productPrice(new BigDecimal(productDTO.getProductPrice()))
-				.productName(productDTO.getProductName())
-				.productDescription(productDTO.getProductDescription())
-				.id(productDTO.getId())
-				.build();
+		Product product = new Product();
+		product.setProductDescription(productDTO.getProductDescription());
+		product.setProductName(productDTO.getProductName());
+		product.setProductPrice(BigDecimal.valueOf(productDTO.getProductPrice()));
+		product.setId(productDTO.getId());
 
 		productPersistenceAdapter.saveRecord(product);
 

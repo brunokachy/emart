@@ -37,10 +37,10 @@ public class ProductController {
 	@ApiOperation(value = "Create Product")
 	@PostMapping(value = {"/create_product"}, produces = MediaType.APPLICATION_JSON_VALUE,
 			consumes = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<ApiResponse<ProductDTO>> createProduct(@RequestBody ProductDTO productDTO) {
-		log.info("CREATE PRODUCT: {}", productDTO.toString());
+	public ResponseEntity<ApiResponse<ProductDTO>> createProduct(@RequestBody ProductDTO product) {
+		log.info("CREATE PRODUCT: {}", product);
 		ApiResponse<ProductDTO> apiResponse = new ApiResponse<>();
-		ProductDTO response = productService.createProduct(productDTO);
+		ProductDTO response = productService.createProduct(product);
 		apiResponse.setMessage("Product created successfully");
 		apiResponse.setData(response);
 		return new ResponseEntity<>(apiResponse, HttpStatus.OK);
@@ -49,10 +49,10 @@ public class ProductController {
 	@ApiOperation(value = "Update Product")
 	@PostMapping(value = {"/update_product"}, produces = MediaType.APPLICATION_JSON_VALUE,
 			consumes = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<ApiResponse<ProductDTO>> updateProduct(@RequestBody ProductDTO productDTO) {
-		log.info("UPDATE PRODUCT: {}", productDTO.toString());
+	public ResponseEntity<ApiResponse<ProductDTO>> updateProduct(@RequestBody ProductDTO product) {
+		log.info("UPDATE PRODUCT: {}", product);
 		ApiResponse<ProductDTO> apiResponse = new ApiResponse<>();
-		ProductDTO response = productService.updateProduct(productDTO);
+		ProductDTO response = productService.updateProduct(product);
 		apiResponse.setMessage("Product updated successfully");
 		apiResponse.setData(response);
 		return new ResponseEntity<>(apiResponse, HttpStatus.OK);

@@ -12,14 +12,16 @@ import javax.persistence.Id;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 
-import lombok.Builder;
 import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
 /**
  * @author Bruno Okafor 2019-11-19
  */
 @Getter
-@Builder
+@Setter
+@ToString
 @Entity
 public class Product implements Serializable {
 
@@ -30,7 +32,7 @@ public class Product implements Serializable {
 	@Column(nullable = false, updatable = false)
 	private String productName;
 
-	@Column(nullable = false, precision = 36, scale = 16)
+	@Column(nullable = false, precision = 36, scale = 4)
 	private BigDecimal productPrice;
 
 	private String productDescription;

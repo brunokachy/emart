@@ -10,14 +10,16 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 
-import lombok.Builder;
 import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
 /**
  * @author Bruno Okafor 2019-11-19
  */
 @Getter
-@Builder
+@Setter
+@ToString
 @Entity
 public class OrderDetail implements Serializable {
 
@@ -31,7 +33,7 @@ public class OrderDetail implements Serializable {
 	@ManyToOne
 	private Order order;
 
-	@Column(nullable = false, precision = 36, scale = 16)
+	@Column(nullable = false, precision = 36, scale = 4)
 	private BigDecimal sellingPrice;
 
 	@Column(nullable = false)

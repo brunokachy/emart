@@ -14,9 +14,9 @@ import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 
-import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 /**
  * @author Bruno Okafor 2019-11-19
@@ -24,7 +24,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-@Builder
+@ToString
 @Entity
 @Table(name = "product_order")
 public class Order implements Serializable {
@@ -36,7 +36,7 @@ public class Order implements Serializable {
 	@ManyToOne
 	private Customer customer;
 
-	@Column(nullable = false, precision = 36, scale = 16)
+	@Column(nullable = false, precision = 36, scale = 4)
 	private BigDecimal totalOrderValue;
 
 	@Column(nullable = false)

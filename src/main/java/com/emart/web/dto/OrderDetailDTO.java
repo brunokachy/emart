@@ -1,5 +1,7 @@
 package com.emart.web.dto;
 
+import java.io.Serializable;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -8,7 +10,7 @@ import lombok.Setter;
  */
 @Getter
 @Setter
-public class OrderDetailDTO {
+public class OrderDetailDTO implements Serializable {
 	private ProductDTO product;
 
 	private Double sellingPrice;
