@@ -3,9 +3,9 @@ A simple E-commerce site
 
 Storage Solution used for the web service is h2 database
 h2 Database Details
-username: root
-password: root
-datasource url: jdbc:h2:mem:emartdb
+username=root
+password=root
+datasource url=jdbc:h2:mem:emartdb
 H2 console is available at '/h2-console'
 
 
