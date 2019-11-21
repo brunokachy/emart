@@ -1,4 +1,4 @@
-package com.emart.web.dto;
+package com.emart.web.dto.response;
 
 import java.io.Serializable;
 
@@ -7,12 +7,12 @@ import lombok.Setter;
 import lombok.ToString;
 
 /**
- * @author Bruno Okafor 2019-11-19
+ * @author Bruno Okafor 2019-11-21
  */
 @Getter
 @Setter
 @ToString
-public class ProductDTO implements Serializable {
+public class ProductResponse implements Serializable {
 
 	private Long id;
 
@@ -21,5 +21,4 @@ public class ProductDTO implements Serializable {
 	private Double productPrice;
 
 	private String productDescription;
-
 }

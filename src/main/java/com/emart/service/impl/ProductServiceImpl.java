@@ -12,8 +12,10 @@ import com.emart.exceptions.BadRequestException;
 import com.emart.persistence.entity.Product;
 import com.emart.persistence.service.ProductPersistenceAdapter;
 import com.emart.service.ProductService;
-import com.emart.web.dto.ProductDTO;
-import com.emart.web.dto.ProductListResponse;
+import com.emart.web.dto.request.CreateProductRequest;
+import com.emart.web.dto.request.UpdateProductRequest;
+import com.emart.web.dto.response.ProductListResponse;
+import com.emart.web.dto.response.ProductResponse;
 
 /**
  * @author Bruno Okafor 2019-11-20
@@ -28,33 +30,35 @@ public class ProductServiceImpl implements ProductService {
 	}
 
 	@Override
-	public ProductDTO createProduct(final ProductDTO productDTO) {
+	public ProductResponse createProduct(final CreateProductRequest requestProductDTO) {
 
-		if (StringUtils.isEmpty(productDTO.getProductName())) {
+		if (StringUtils.isEmpty(requestProductDTO.getProductName())) {
 			throw new BadRequestException("Missing required detail: Product name.");
 		}
 
-		if (StringUtils.isEmpty(productDTO.getProductPrice())) {
+		if (StringUtils.isEmpty(requestProductDTO.getProductPrice())) {
 			throw new BadRequestException("Missing required detail: Product price.");
 		}
 
 		Product product = new Product();
-		product.setProductDescription(productDTO.getProductDescription());
-		product.setProductName(productDTO.getProductName());
-		product.setProductPrice(BigDecimal.valueOf(productDTO.getProductPrice()));
+		product.setProductDescription(requestProductDTO.getProductDescription());
+		product.setProductName(requestProductDTO.getProductName());
+		product.setProductPrice(BigDecimal.valueOf(requestProductDTO.getProductPrice()));
 
 		product = productPersistenceAdapter.saveRecord(product);
 
-		productDTO.setId(product.getId());
-
-		return productDTO;
+		return buildProductResponse(product);
 	}
 
 	@Override
-	public ProductDTO updateProduct(final ProductDTO productDTO) {
+	public ProductResponse updateProduct(final UpdateProductRequest productDTO) {
 
 		if (StringUtils.isEmpty(productDTO.getProductPrice())) {
 			throw new BadRequestException("Missing required detail: Product price.");
+		}
+
+		if (StringUtils.isEmpty(productDTO.getProductPrice())) {
+			throw new BadRequestException("Missing required detail: Product name.");
 		}
 
 		if (StringUtils.isEmpty(productDTO.getId())) {
@@ -68,28 +72,32 @@ public class ProductServiceImpl implements ProductService {
 
 		productPersistenceAdapter.saveRecord(product);
 
-		return productDTO;
+		return buildProductResponse(product);
 	}
 
 	@Override
-	public ProductListResponse fetchProducts(int startIndex, int limit) {
+	public ProductListResponse fetchProducts(final int startIndex, final int limit) {
 		Page<Product> productPage = productPersistenceAdapter.getProducts(startIndex, limit);
-		List<ProductDTO> productDTOS = new ArrayList<>();
+		List<ProductResponse> products = new ArrayList<>();
 
-		productPage.forEach(product -> {
-			ProductDTO productDTO = new ProductDTO();
-			productDTO.setId(product.getId());
-			productDTO.setProductDescription(product.getProductDescription());
-			productDTO.setProductName(product.getProductName());
-			productDTO.setProductPrice(product.getProductPrice().doubleValue());
-			productDTOS.add(productDTO);
-		});
+		productPage.forEach(product -> products.add(buildProductResponse(product)));
 
 		ProductListResponse productListResponse = new ProductListResponse();
 		productListResponse.setLimit(limit);
 		productListResponse.setSize(productPage.getTotalElements());
 		productListResponse.setStart(startIndex);
-		productListResponse.setProducts(productDTOS);
+		productListResponse.setProducts(products);
+
 		return productListResponse;
+	}
+
+	private ProductResponse buildProductResponse(final Product product) {
+		ProductResponse productResponse = new ProductResponse();
+		productResponse.setId(product.getId());
+		productResponse.setProductDescription(product.getProductDescription());
+		productResponse.setProductName(product.getProductName());
+		productResponse.setProductPrice(product.getProductPrice().doubleValue());
+
+		return productResponse;
 	}
 }

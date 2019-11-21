@@ -17,7 +17,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.emart.service.OrderService;
 import com.emart.web.dto.ApiResponse;
-import com.emart.web.dto.OrderDTO;
+import com.emart.web.dto.request.OrderRequest;
+import com.emart.web.dto.response.OrderResponse;
 import io.swagger.annotations.ApiOperation;
 
 /**
@@ -39,10 +40,10 @@ public class OrderController {
 	@ApiOperation(value = "Create Order")
 	@PostMapping(value = {"/create_order"}, produces = MediaType.APPLICATION_JSON_VALUE,
 			consumes = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<ApiResponse<OrderDTO>> createProduct(@RequestBody OrderDTO orderRequest) {
+	public ResponseEntity<ApiResponse<OrderResponse>> createProduct(@RequestBody OrderRequest orderRequest) {
 		log.info("CREATE ORDER: {}", orderRequest);
-		ApiResponse<OrderDTO> apiResponse = new ApiResponse<>();
-		OrderDTO response = orderService.createOrder(orderRequest);
+		ApiResponse<OrderResponse> apiResponse = new ApiResponse<>();
+		OrderResponse response = orderService.createOrder(orderRequest);
 		apiResponse.setMessage("Order created successfully");
 		apiResponse.setData(response);
 		return new ResponseEntity<>(apiResponse, HttpStatus.OK);
@@ -50,10 +51,10 @@ public class OrderController {
 
 	@ApiOperation(value = "Retrieve Orders by Date Created")
 	@GetMapping(value = {"/retrieve_order"}, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<ApiResponse<List<OrderDTO>>> createProduct(@RequestParam Date from, @RequestParam Date to) {
+	public ResponseEntity<ApiResponse<List<OrderResponse>>> createProduct(@RequestParam Date from, @RequestParam Date to) {
 		log.info("RETRIEVE ORDER");
-		ApiResponse<List<OrderDTO>> apiResponse = new ApiResponse<>();
-		List<OrderDTO> response = orderService.fetchOrders(from, to);
+		ApiResponse<List<OrderResponse>> apiResponse = new ApiResponse<>();
+		List<OrderResponse> response = orderService.fetchOrders(from, to);
 		apiResponse.setMessage("Order retrieved successfully");
 		apiResponse.setData(response);
 		return new ResponseEntity<>(apiResponse, HttpStatus.OK);

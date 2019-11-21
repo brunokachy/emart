@@ -1,16 +1,18 @@
 package com.emart.service;
 
-import com.emart.web.dto.ProductDTO;
-import com.emart.web.dto.ProductListResponse;
+import com.emart.web.dto.request.CreateProductRequest;
+import com.emart.web.dto.request.UpdateProductRequest;
+import com.emart.web.dto.response.ProductListResponse;
+import com.emart.web.dto.response.ProductResponse;
 
 /**
  * @author Bruno Okafor 2019-11-20
  */
 public interface ProductService {
 
-	ProductDTO createProduct(ProductDTO productDTO);
+	ProductResponse createProduct(CreateProductRequest product);
 
-	ProductDTO updateProduct(ProductDTO productDTO);
+	ProductResponse updateProduct(UpdateProductRequest product);
 
 	ProductListResponse fetchProducts(int startIndex, int size);
 }

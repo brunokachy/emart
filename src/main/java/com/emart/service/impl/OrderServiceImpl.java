@@ -23,9 +23,10 @@ import com.emart.persistence.service.OrderPersistenceAdapter;
 import com.emart.persistence.service.ProductPersistenceAdapter;
 import com.emart.service.OrderService;
 import com.emart.web.dto.CustomerDTO;
-import com.emart.web.dto.OrderDTO;
-import com.emart.web.dto.OrderDetailDTO;
-import com.emart.web.dto.ProductDTO;
+import com.emart.web.dto.request.OrderDetailRequest;
+import com.emart.web.dto.request.OrderRequest;
+import com.emart.web.dto.response.OrderDetailResponse;
+import com.emart.web.dto.response.OrderResponse;
 
 /**
  * @author Bruno Okafor 2019-11-20
@@ -51,7 +52,7 @@ public class OrderServiceImpl implements OrderService {
 
 	@Override
 	@Transactional
-	public OrderDTO createOrder(final OrderDTO orderRequest) {
+	public OrderResponse createOrder(final OrderRequest orderRequest) {
 		validateOrder(orderRequest);
 
 		Double totalOrderValue = 0.0;
@@ -63,17 +64,20 @@ public class OrderServiceImpl implements OrderService {
 		order.setOrderId(generateUniqueOrderId());
 		order = orderPersistenceAdapter.saveRecord(order);
 
-		final List<OrderDetailDTO> orderDetails = orderRequest.getOrderDetails();
+		final List<OrderDetailRequest> orderDetailRequestList = orderRequest.getOrderDetails();
+		final List<OrderDetail> orderDetails = new ArrayList<>();
+
 		for (int i = 0, orderDetailsSize = orderDetails.size(); i < orderDetailsSize; i++) {
-			final OrderDetailDTO orderDetailDTO = orderDetails.get(i);
-			Product product = productPersistenceAdapter.getRecordById(orderDetailDTO.getProduct().getId());
+			final OrderDetailRequest orderDetailRequest = orderDetailRequestList.get(i);
+			Product product = productPersistenceAdapter.getRecordById(orderDetailRequest.getProductId());
 			OrderDetail orderDetail = new OrderDetail();
 			orderDetail.setProduct(product);
-			orderDetail.setQuantity(orderDetailDTO.getQuantity());
+			orderDetail.setQuantity(orderDetailRequest.getQuantity());
 			orderDetail.setSellingPrice(product.getProductPrice());
 			orderDetail.setOrder(order);
 
 			orderDetailPersistenceAdapter.saveRecord(orderDetail);
+			orderDetails.add(orderDetail);
 
 			Double productOrderValue = orderDetail.getSellingPrice().doubleValue() * orderDetail.getQuantity().doubleValue();
 			totalOrderValue += productOrderValue;
@@ -82,14 +86,11 @@ public class OrderServiceImpl implements OrderService {
 		order.setTotalOrderValue(BigDecimal.valueOf(totalOrderValue));
 		orderPersistenceAdapter.saveRecord(order);
 
-		orderRequest.setOrderId(order.getOrderId());
-		orderRequest.setTotalOrderValue(totalOrderValue);
-
-		return orderRequest;
+		return buildOrderResponse(order, orderDetails);
 	}
 
 	@Override
-	public List<OrderDTO> fetchOrders(final Date from, final Date to) {
+	public List<OrderResponse> fetchOrders(final Date from, final Date to) {
 		if (StringUtils.isEmpty(from)) {
 			throw new BadRequestException("Missing required detail: Start date.");
 		}
@@ -99,30 +100,11 @@ public class OrderServiceImpl implements OrderService {
 		}
 
 		List<Order> orders = orderPersistenceAdapter.fetchOrdersByDate(from, to);
-
-		List<OrderDTO> orderList = new ArrayList<>();
+		List<OrderResponse> orderList = new ArrayList<>();
 
 		for (Order order : orders) {
-			List<OrderDetailDTO> orderDetailDTOS = new ArrayList<>();
 			List<OrderDetail> orderDetails = orderDetailPersistenceAdapter.fetchOrderDetailsByOrder(order);
-
-			for (OrderDetail orderDetail : orderDetails) {
-				OrderDetailDTO orderDetailDTO = new OrderDetailDTO();
-				orderDetailDTO.setProduct(from(orderDetail.getProduct()));
-				orderDetailDTO.setQuantity(orderDetail.getQuantity());
-				orderDetailDTO.setSellingPrice(orderDetail.getSellingPrice().doubleValue());
-
-				orderDetailDTOS.add(orderDetailDTO);
-			}
-
-			OrderDTO orderDTO = new OrderDTO();
-			orderDTO.setTotalOrderValue(order.getTotalOrderValue().doubleValue());
-			orderDTO.setOrderId(order.getOrderId());
-			orderDTO.setDateCreated(new Date(order.getDateCreated().getTime()));
-			orderDTO.setOrderDetails(orderDetailDTOS);
-			orderDTO.setCustomer(from(order.getCustomer()));
-
-			orderList.add(orderDTO);
+			orderList.add(buildOrderResponse(order, orderDetails));
 		}
 
 		return orderList;
@@ -140,7 +122,7 @@ public class OrderServiceImpl implements OrderService {
 		return orderId;
 	}
 
-	private Customer customerCheck(final OrderDTO orderRequest) {
+	private Customer customerCheck(final OrderRequest orderRequest) {
 		Optional<Customer> optionalCustomer = customerPersistenceAdapter.getCustomerByEmail(orderRequest.getCustomer().getEmail());
 
 		if (!optionalCustomer.isPresent()) {
@@ -165,17 +147,36 @@ public class OrderServiceImpl implements OrderService {
 		return customerDTO;
 	}
 
-	private ProductDTO from(final Product product) {
-		ProductDTO productDTO = new ProductDTO();
-		productDTO.setProductPrice(product.getProductPrice().doubleValue());
-		productDTO.setProductName(product.getProductName());
-		productDTO.setProductDescription(product.getProductDescription());
-		productDTO.setId(product.getId());
+	private OrderResponse buildOrderResponse(final Order order, final List<OrderDetail> orderDetails) {
+		OrderResponse orderResponse = new OrderResponse();
+		orderResponse.setCustomer(from(order.getCustomer()));
+		orderResponse.setDateCreated(new Date(order.getDateCreated().getTime()));
+		orderResponse.setOrderDetails(buildOrderDetailResponses(orderDetails));
+		orderResponse.setOrderId(order.getOrderId());
+		orderResponse.setTotalOrderValue(order.getTotalOrderValue().doubleValue());
 
-		return productDTO;
+		return orderResponse;
 	}
 
-	private void validateOrder(final OrderDTO orderRequest) {
+	private List<OrderDetailResponse> buildOrderDetailResponses(final List<OrderDetail> orderDetails) {
+		List<OrderDetailResponse> orderDetailResponses = new ArrayList<>();
+
+		for (int i = 0, orderDetailsSize = orderDetails.size(); i < orderDetailsSize; i++) {
+			final OrderDetail orderDetail = orderDetails.get(i);
+			Product product = orderDetail.getProduct();
+			OrderDetailResponse orderDetailResponse = new OrderDetailResponse();
+			orderDetailResponse.setProductDescription(product.getProductDescription());
+			orderDetailResponse.setProductName(product.getProductName());
+			orderDetailResponse.setQuantity(orderDetail.getQuantity());
+			orderDetailResponse.setSellingPrice(product.getProductPrice().doubleValue());
+
+			orderDetailResponses.add(orderDetailResponse);
+		}
+
+		return orderDetailResponses;
+	}
+
+	private void validateOrder(final OrderRequest orderRequest) {
 
 		if (StringUtils.isEmpty(orderRequest)) {
 			throw new BadRequestException("Missing required detail: Order Request Object.");

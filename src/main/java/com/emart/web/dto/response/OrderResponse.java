@@ -1,9 +1,10 @@
-package com.emart.web.dto;
+package com.emart.web.dto.response;
 
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
+import com.emart.web.dto.CustomerDTO;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -14,7 +15,7 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class OrderDTO implements Serializable {
+public class OrderResponse implements Serializable {
 
 	private String orderId;
 
@@ -24,6 +25,6 @@ public class OrderDTO implements Serializable {
 
 	private Date dateCreated;
 
-	private List<OrderDetailDTO> orderDetails;
+	private List<OrderDetailResponse> orderDetails;
 
 }

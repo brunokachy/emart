@@ -12,8 +12,6 @@ import lombok.Setter;
 @Setter
 public class CustomerDTO implements Serializable {
 
-	private Long id;
-
 	private String firstName;
 
 	private String lastName;

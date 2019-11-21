@@ -1,4 +1,4 @@
-package com.emart.web.dto;
+package com.emart.web.dto.response;
 
 import java.io.Serializable;
 import java.util.List;
@@ -13,7 +13,7 @@ import lombok.Setter;
 @Setter
 public class ProductListResponse implements Serializable {
 
-	private List<ProductDTO> products;
+	private List<ProductResponse> products;
 
 	private int limit;
 

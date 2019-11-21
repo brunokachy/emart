@@ -14,8 +14,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.emart.service.ProductService;
 import com.emart.web.dto.ApiResponse;
-import com.emart.web.dto.ProductDTO;
-import com.emart.web.dto.ProductListResponse;
+import com.emart.web.dto.request.CreateProductRequest;
+import com.emart.web.dto.request.UpdateProductRequest;
+import com.emart.web.dto.response.ProductListResponse;
+import com.emart.web.dto.response.ProductResponse;
 import io.swagger.annotations.ApiOperation;
 
 /**
@@ -37,10 +39,10 @@ public class ProductController {
 	@ApiOperation(value = "Create Product")
 	@PostMapping(value = {"/create_product"}, produces = MediaType.APPLICATION_JSON_VALUE,
 			consumes = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<ApiResponse<ProductDTO>> createProduct(@RequestBody ProductDTO product) {
+	public ResponseEntity<ApiResponse<ProductResponse>> createProduct(@RequestBody CreateProductRequest product) {
 		log.info("CREATE PRODUCT: {}", product);
-		ApiResponse<ProductDTO> apiResponse = new ApiResponse<>();
-		ProductDTO response = productService.createProduct(product);
+		ApiResponse<ProductResponse> apiResponse = new ApiResponse<>();
+		ProductResponse response = productService.createProduct(product);
 		apiResponse.setMessage("Product created successfully");
 		apiResponse.setData(response);
 		return new ResponseEntity<>(apiResponse, HttpStatus.OK);
@@ -49,10 +51,10 @@ public class ProductController {
 	@ApiOperation(value = "Update Product")
 	@PostMapping(value = {"/update_product"}, produces = MediaType.APPLICATION_JSON_VALUE,
 			consumes = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<ApiResponse<ProductDTO>> updateProduct(@RequestBody ProductDTO product) {
+	public ResponseEntity<ApiResponse<ProductResponse>> updateProduct(@RequestBody UpdateProductRequest product) {
 		log.info("UPDATE PRODUCT: {}", product);
-		ApiResponse<ProductDTO> apiResponse = new ApiResponse<>();
-		ProductDTO response = productService.updateProduct(product);
+		ApiResponse<ProductResponse> apiResponse = new ApiResponse<>();
+		ProductResponse response = productService.updateProduct(product);
 		apiResponse.setMessage("Product updated successfully");
 		apiResponse.setData(response);
 		return new ResponseEntity<>(apiResponse, HttpStatus.OK);
