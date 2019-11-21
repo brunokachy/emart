@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -51,7 +52,8 @@ public class OrderController {
 
 	@ApiOperation(value = "Retrieve Orders by Date Created")
 	@GetMapping(value = {"/retrieve_order"}, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<ApiResponse<List<OrderResponse>>> createProduct(@RequestParam Date from, @RequestParam Date to) {
+	public ResponseEntity<ApiResponse<List<OrderResponse>>> createProduct(@RequestParam @DateTimeFormat(pattern = "dd/MM/yyyy") Date from,
+																		  @RequestParam @DateTimeFormat(pattern = "dd/MM/yyyy") Date to) {
 		log.info("RETRIEVE ORDER");
 		ApiResponse<List<OrderResponse>> apiResponse = new ApiResponse<>();
 		List<OrderResponse> response = orderService.fetchOrders(from, to);

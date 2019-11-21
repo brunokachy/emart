@@ -66,7 +66,7 @@ public class OrderServiceImpl implements OrderService {
 
 		final List<OrderDetailRequest> orderDetailRequestList = orderRequest.getOrderDetails();
 		final List<OrderDetail> orderDetails = new ArrayList<>();
-		System.out.println("size of order details " + orderDetailRequestList.size());
+
 		for (OrderDetailRequest orderDetailRequest : orderDetailRequestList) {
 			Product product = productPersistenceAdapter.getRecordById(orderDetailRequest.getProductId());
 			OrderDetail orderDetail = new OrderDetail();
