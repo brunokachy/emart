@@ -61,11 +61,10 @@ public class ProductServiceImpl implements ProductService {
 			throw new BadRequestException("Missing required detail: Product id.");
 		}
 
-		Product product = new Product();
+		Product product = productPersistenceAdapter.getRecordById(productDTO.getId());
 		product.setProductDescription(productDTO.getProductDescription());
 		product.setProductName(productDTO.getProductName());
 		product.setProductPrice(BigDecimal.valueOf(productDTO.getProductPrice()));
-		product.setId(productDTO.getId());
 
 		productPersistenceAdapter.saveRecord(product);
 

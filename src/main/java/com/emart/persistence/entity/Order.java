@@ -36,7 +36,7 @@ public class Order implements Serializable {
 	@ManyToOne
 	private Customer customer;
 
-	@Column(nullable = false, precision = 36, scale = 4)
+	@Column(nullable = false, precision = 36, scale = 2)
 	private BigDecimal totalOrderValue;
 
 	@Column(nullable = false)

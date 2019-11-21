@@ -33,7 +33,7 @@ public class OrderDetail implements Serializable {
 	@ManyToOne
 	private Order order;
 
-	@Column(nullable = false, precision = 36, scale = 4)
+	@Column(nullable = false, precision = 36, scale = 2)
 	private BigDecimal sellingPrice;
 
 	@Column(nullable = false)

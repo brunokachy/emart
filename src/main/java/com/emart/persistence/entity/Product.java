@@ -29,10 +29,10 @@ public class Product implements Serializable {
 	@GeneratedValue(strategy = GenerationType.SEQUENCE)
 	private Long id;
 
-	@Column(nullable = false, updatable = false)
+	@Column(nullable = false)
 	private String productName;
 
-	@Column(nullable = false, precision = 36, scale = 4)
+	@Column(nullable = false, precision = 36, scale = 2)
 	private BigDecimal productPrice;
 
 	private String productDescription;
