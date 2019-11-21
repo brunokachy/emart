@@ -66,13 +66,12 @@ public class OrderServiceImpl implements OrderService {
 
 		final List<OrderDetailRequest> orderDetailRequestList = orderRequest.getOrderDetails();
 		final List<OrderDetail> orderDetails = new ArrayList<>();
-
-		for (int i = 0, orderDetailsSize = orderDetails.size(); i < orderDetailsSize; i++) {
-			final OrderDetailRequest orderDetailRequest = orderDetailRequestList.get(i);
+		System.out.println("size of order details " + orderDetailRequestList.size());
+		for (OrderDetailRequest orderDetailRequest : orderDetailRequestList) {
 			Product product = productPersistenceAdapter.getRecordById(orderDetailRequest.getProductId());
 			OrderDetail orderDetail = new OrderDetail();
 			orderDetail.setProduct(product);
-			orderDetail.setQuantity(orderDetailRequest.getQuantity());
+			orderDetail.setQuantity(orderDetailRequest.getQuantity() == 0 ? 1 : orderDetailRequest.getQuantity());
 			orderDetail.setSellingPrice(product.getProductPrice());
 			orderDetail.setOrder(order);
 
