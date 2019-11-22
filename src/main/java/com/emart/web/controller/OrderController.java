@@ -42,7 +42,7 @@ public class OrderController {
 	@PostMapping(value = {"/create_order"}, produces = MediaType.APPLICATION_JSON_VALUE,
 			consumes = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<ApiResponse<OrderResponse>> createProduct(@RequestBody OrderRequest orderRequest) {
-		log.info("CREATE ORDER: {}", orderRequest);
+		log.info("CREATE ORDER");
 		ApiResponse<OrderResponse> apiResponse = new ApiResponse<>();
 		OrderResponse response = orderService.createOrder(orderRequest);
 		apiResponse.setMessage("Order created successfully");
