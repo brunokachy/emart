@@ -10,14 +10,12 @@ import javax.persistence.Id;
 
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 
 /**
  * @author Bruno Okafor 2019-11-19
  */
 @Getter
 @Setter
-@ToString
 @Entity
 public class Customer implements Serializable {
 

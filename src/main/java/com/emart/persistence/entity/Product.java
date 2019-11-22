@@ -14,14 +14,12 @@ import javax.persistence.PreUpdate;
 
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 
 /**
  * @author Bruno Okafor 2019-11-19
  */
 @Getter
 @Setter
-@ToString
 @Entity
 public class Product implements Serializable {
 
@@ -40,6 +38,9 @@ public class Product implements Serializable {
 	private Timestamp dateCreated;
 
 	private Timestamp lastUpdated;
+
+	@Column(nullable = false, unique = true)
+	private String productId;
 
 	@PreUpdate
 	@PrePersist

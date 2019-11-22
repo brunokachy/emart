@@ -12,14 +12,12 @@ import javax.persistence.ManyToOne;
 
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 
 /**
  * @author Bruno Okafor 2019-11-19
  */
 @Getter
 @Setter
-@ToString
 @Entity
 public class OrderDetail implements Serializable {
 

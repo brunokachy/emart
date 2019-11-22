@@ -55,35 +55,31 @@ public class OrderServiceImpl implements OrderService {
 	public OrderResponse createOrder(final OrderRequest orderRequest) {
 		validateOrder(orderRequest);
 
-		Double totalOrderValue = 0.0;
-		Customer customer = customerCheck(orderRequest);
+		Customer customer = getCustomer(orderRequest.getCustomer());
+		String orderId = generateUniqueOrderId();
 
 		Order order = new Order();
-		order.setTotalOrderValue(BigDecimal.valueOf(totalOrderValue));
 		order.setCustomer(customer);
-		order.setOrderId(generateUniqueOrderId());
-		order = orderPersistenceAdapter.saveRecord(order);
+		order.setOrderId(orderId);
+		order.setTotalOrderValue(calculateTotalOrderValue(orderRequest.getOrderDetails()));
+		orderPersistenceAdapter.saveRecord(order);
 
-		final List<OrderDetailRequest> orderDetailRequestList = orderRequest.getOrderDetails();
-		final List<OrderDetail> orderDetails = new ArrayList<>();
+		List<OrderDetail> orderDetails = new ArrayList<>();
 
-		for (OrderDetailRequest orderDetailRequest : orderDetailRequestList) {
-			Product product = productPersistenceAdapter.getRecordById(orderDetailRequest.getProductId());
+		for (OrderDetailRequest orderDetailRequest : orderRequest.getOrderDetails()) {
+			Optional<Product> optionalProduct = productPersistenceAdapter.getProductByProductId(orderDetailRequest.getProductId());
+			if (!optionalProduct.isPresent()) {
+				throw new BadRequestException("Product does not exist");
+			}
 			OrderDetail orderDetail = new OrderDetail();
-			orderDetail.setProduct(product);
-			orderDetail.setQuantity(orderDetailRequest.getQuantity() == 0 ? 1 : orderDetailRequest.getQuantity());
-			orderDetail.setSellingPrice(product.getProductPrice());
+			orderDetail.setProduct(optionalProduct.get());
+			orderDetail.setQuantity(orderDetailRequest.getQuantity() <= 0 ? 1 : orderDetailRequest.getQuantity());
+			orderDetail.setSellingPrice(optionalProduct.get().getProductPrice());
 			orderDetail.setOrder(order);
 
 			orderDetailPersistenceAdapter.saveRecord(orderDetail);
 			orderDetails.add(orderDetail);
-
-			Double productOrderValue = orderDetail.getSellingPrice().doubleValue() * orderDetail.getQuantity().doubleValue();
-			totalOrderValue += productOrderValue;
 		}
-
-		order.setTotalOrderValue(BigDecimal.valueOf(totalOrderValue));
-		orderPersistenceAdapter.saveRecord(order);
 
 		return buildOrderResponse(order, orderDetails);
 	}
@@ -109,6 +105,22 @@ public class OrderServiceImpl implements OrderService {
 		return orderList;
 	}
 
+	private BigDecimal calculateTotalOrderValue(final List<OrderDetailRequest> orderDetails) {
+		Double totalOrderValue = 0.0;
+
+		for (OrderDetailRequest orderDetailRequest : orderDetails) {
+			Optional<Product> optionalProduct = productPersistenceAdapter.getProductByProductId(orderDetailRequest.getProductId());
+
+			if (!optionalProduct.isPresent()) {
+				throw new BadRequestException("Product does not exist");
+			}
+
+			Double productOrderValue = optionalProduct.get().getProductPrice().doubleValue() * orderDetailRequest.getQuantity().doubleValue();
+			totalOrderValue += productOrderValue;
+		}
+		return BigDecimal.valueOf(totalOrderValue);
+	}
+
 	private String generateUniqueOrderId() {
 		String orderId = RandomStringUtils.randomAlphabetic(6).toUpperCase();
 		Optional<Order> optionalOrder = orderPersistenceAdapter.getOrderByOrderId(orderId);
@@ -121,22 +133,22 @@ public class OrderServiceImpl implements OrderService {
 		return orderId;
 	}
 
-	private Customer customerCheck(final OrderRequest orderRequest) {
-		Optional<Customer> optionalCustomer = customerPersistenceAdapter.getCustomerByEmail(orderRequest.getCustomer().getEmail());
+	private Customer getCustomer(final CustomerDTO customerDTO) {
+		Optional<Customer> optionalCustomer = customerPersistenceAdapter.getCustomerByEmail(customerDTO.getEmail());
 
 		if (!optionalCustomer.isPresent()) {
 			Customer customer = new Customer();
-			customer.setEmail(orderRequest.getCustomer().getEmail());
-			customer.setFirstName(orderRequest.getCustomer().getFirstName());
-			customer.setLastName(orderRequest.getCustomer().getLastName());
-			customer.setPhoneNumber(orderRequest.getCustomer().getPhoneNumber());
+			customer.setEmail(customerDTO.getEmail());
+			customer.setFirstName(customerDTO.getFirstName());
+			customer.setLastName(customerDTO.getLastName());
+			customer.setPhoneNumber(customerDTO.getPhoneNumber());
 
 			return customerPersistenceAdapter.saveRecord(customer);
 		}
 		return optionalCustomer.get();
 	}
 
-	private CustomerDTO from(final Customer customer) {
+	private CustomerDTO customerToCustomerDTO(final Customer customer) {
 		CustomerDTO customerDTO = new CustomerDTO();
 		customerDTO.setEmail(customer.getEmail());
 		customerDTO.setFirstName(customer.getFirstName());
@@ -148,8 +160,8 @@ public class OrderServiceImpl implements OrderService {
 
 	private OrderResponse buildOrderResponse(final Order order, final List<OrderDetail> orderDetails) {
 		OrderResponse orderResponse = new OrderResponse();
-		orderResponse.setCustomer(from(order.getCustomer()));
-		orderResponse.setDateCreated(new Date(order.getDateCreated().getTime()));
+		orderResponse.setCustomer(customerToCustomerDTO(order.getCustomer()));
+		orderResponse.setDateCreated(order.getDateCreated() != null ? new Date(order.getDateCreated().getTime()) : new Date());
 		orderResponse.setOrderDetails(buildOrderDetailResponses(orderDetails));
 		orderResponse.setOrderId(order.getOrderId());
 		orderResponse.setTotalOrderValue(order.getTotalOrderValue().doubleValue());
@@ -161,7 +173,7 @@ public class OrderServiceImpl implements OrderService {
 		List<OrderDetailResponse> orderDetailResponses = new ArrayList<>();
 
 		for (int i = 0, orderDetailsSize = orderDetails.size(); i < orderDetailsSize; i++) {
-			final OrderDetail orderDetail = orderDetails.get(i);
+			OrderDetail orderDetail = orderDetails.get(i);
 			Product product = orderDetail.getProduct();
 			OrderDetailResponse orderDetailResponse = new OrderDetailResponse();
 			orderDetailResponse.setProductDescription(product.getProductDescription());

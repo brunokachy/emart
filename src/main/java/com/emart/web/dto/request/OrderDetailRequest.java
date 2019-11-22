@@ -14,7 +14,7 @@ import lombok.ToString;
 @Setter
 @ToString
 public class OrderDetailRequest implements Serializable {
-	private Long productId;
+	private String productId;
 
 	private Integer quantity;
 }

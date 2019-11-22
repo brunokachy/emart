@@ -1,5 +1,7 @@
 package com.emart.persistence.service.impl;
 
+import java.util.Optional;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -35,5 +37,10 @@ public class ProductPersistenceAdapterImpl implements ProductPersistenceAdapter 
 	public Page<Product> getProducts(int startIndex, int limit) {
 		Pageable pageable = PageRequest.of(startIndex, limit);
 		return productRepository.getProducts(pageable);
+	}
+
+	@Override
+	public Optional<Product> getProductByProductId(final String productId) {
+		return productRepository.getByProductId(productId);
 	}
 }

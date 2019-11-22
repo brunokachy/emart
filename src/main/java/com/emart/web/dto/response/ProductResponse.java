@@ -14,7 +14,7 @@ import lombok.ToString;
 @ToString
 public class ProductResponse implements Serializable {
 
-	private Long id;
+	private String productId;
 
 	private String productName;
 

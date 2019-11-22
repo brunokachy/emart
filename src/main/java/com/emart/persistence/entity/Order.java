@@ -16,7 +16,6 @@ import javax.persistence.Table;
 
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 
 /**
  * @author Bruno Okafor 2019-11-19
@@ -24,7 +23,6 @@ import lombok.ToString;
 
 @Getter
 @Setter
-@ToString
 @Entity
 @Table(name = "product_order")
 public class Order implements Serializable {

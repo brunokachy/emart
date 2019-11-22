@@ -50,4 +50,5 @@ public class RestApiControllerAdvice {
 		apiResponse.setMessage(e.getMessage());
 		return new ResponseEntity<>(apiResponse, HttpStatus.NOT_FOUND);
 	}
+
 }
