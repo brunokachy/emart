@@ -10,6 +10,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.springframework.data.domain.Page;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.emart.exceptions.BadRequestException;
@@ -18,6 +19,7 @@ import com.emart.persistence.entity.Product;
 import com.emart.persistence.service.ProductPersistenceAdapter;
 import com.emart.web.dto.request.CreateProductRequest;
 import com.emart.web.dto.request.UpdateProductRequest;
+import com.emart.web.dto.response.ProductListResponse;
 import com.emart.web.dto.response.ProductResponse;
 
 /**
@@ -66,6 +68,21 @@ public class ProductServiceImplTest {
 		createProductRequest.setProductName(PRODUCT_NAME);
 
 		productService.createProduct(createProductRequest);
+	}
+
+	@Test
+	public void whenFetchProductThenSuccessful() {
+		int startIndex = 0;
+		int limit = 10;
+
+		Page<Product> productPage = Page.empty();
+		when(productPersistenceAdapter.getProducts(startIndex, limit)).thenReturn(productPage);
+		ProductListResponse productListResponse = productService.fetchProducts(startIndex, limit);
+
+		Assert.assertNotNull(productListResponse);
+		Assert.assertEquals(limit, productListResponse.getLimit());
+		Assert.assertEquals(0, productListResponse.getProducts().size());
+		Assert.assertEquals(0, productListResponse.getSize());
 	}
 
 	@Test
